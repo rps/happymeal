@@ -1,4 +1,12 @@
-var ndx = crossfilter(data);
+var ndx = crossfilter(data),
+    all = ndx.groupAll();
+
+d3.selectAll(".total-count")
+      .text((ndx.size()));
+
+dc.dataCount(".dc-data-count")
+  .dimension(ndx)
+  .group(all);
 
 var parseDate = d3.time.format("%Y-%m-%dT%X");
 
@@ -50,15 +58,13 @@ pie
 var restDim = ndx.dimension(function(d){ return d.RestaurantName; });
 var restTotal = restDim.group().reduceSum(function(d) { return d.count; });
 
-var bar = dc.rowChart('#bar');
+var row = dc.rowChart('#bar');
 
-bar
+row
     .width(500)
     .height(500)
-    .x(d3.scale.linear().domain([0,5000]))
     .dimension(restDim)
     .group(restTotal)
-    .elasticX(true)
     .xAxis().ticks(4);
 
 
