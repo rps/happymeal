@@ -91,38 +91,38 @@ bar
 	.width(500)
 	.height(200)
 	.margins({top: 20, right: 10, bottom: 40, left: 30})
+	// .brushOn(false)
 	.dimension(partyDim)
 	.group(partyTotal)	
 	.x(d3.scale.linear().domain([0,15]))
 	.centerBar(true)
-	.brushOn(false)
-	.gap(1)
 	.renderHorizontalGridLines(true)
 	.elasticY(true)
+	.yAxisLabel("Party Size") 
   .yAxis().tickFormat(d3.format("s"))
 
 bar.xAxis().ticks(15);
 
-/*
+
 var maxRest = restTotal.top(1)[0].value;
 var minRest;
 var ratio;
 
 // Trigger elastic rows if data is too small
-document.addEventListener('mouseup',function(){
-	setTimeout(function(e){
-		minRest = restTotal.top(1)[0].value;
-		ratio = minRest / maxRest;
-		console.log(ratio);
-		if(ratio < .25){
-			row.elasticX(true);
-			dc.renderAll('restTotal');
-		} else {
-			row.elasticX(false);
-			dc.renderAll('restTotal');
-		}
-	},1);
-}, true);
-*/
+// document.addEventListener('mouseup',function(){
+// 	setTimeout(function(e){
+// 		minRest = restTotal.top(1)[0].value;
+// 		ratio = minRest / maxRest;
+// 		console.log(ratio);
+// 		if(ratio < .25){
+// 			row.elasticX(true);
+// 			dc.redrawAll('restTotal');
+// 		} else {
+// 			row.elasticX(false);
+// 			dc.redrawAll('restTotal');
+// 		}
+// 	},1);
+// }, true);
+
 
 dc.renderAll();
