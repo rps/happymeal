@@ -31,9 +31,12 @@ line
 	.width(500).height(200)
 	.dimension(hourDim)
 	.group(reservations)
+	.margins({top: 20, right: 10, bottom: 40, left: 40})
 	.x(d3.scale.linear().domain([0,24]))
 	.yAxisLabel("Reservations per Hour") 
 	.elasticY(true)
+	
+line.yAxis().tickFormat(d3.format("s"))
 
 // Pie Chart - Referrers
 
@@ -59,22 +62,46 @@ var pieTip = d3.tip()
   .offset([-10, 0])
   .html(function (d) { console.log(d); return "<span style='color: #f0027f'>" +  d.data.key + "</span> : "  + numberFormat(d.value); });
 
+// TODO - Add d3tips
 
-
-// Bar Chart - Restaurant Volume
+// Row Chart - Restaurant Volume
 
 var restDim = ndx.dimension(function(d){ return d.RestaurantName; });
 var restTotal = restDim.group().reduceSum(function(d) { return d.count; });
 
-var row = dc.rowChart('#bar');
+var row = dc.rowChart('#row');
 
 row
-    .width(500)
-    .height(500)
-    .dimension(restDim)
-    .group(restTotal)
-    // .elasticX(true)
-    .xAxis().ticks(4);
+  .width(500)
+  .height(500)
+  .dimension(restDim)
+  .group(restTotal)
+  // .elasticX(true)
+  .xAxis().ticks(4);
+
+
+// Bar Chart - Party Size
+
+var partyDim = ndx.dimension(function(d) { return d.Partysize; });
+var partyTotal = partyDim.group().reduceSum(function(d) { return d.count; });
+
+var bar = dc.barChart('#bar');
+
+bar
+	.width(500)
+	.height(200)
+	.margins({top: 20, right: 10, bottom: 40, left: 30})
+	.dimension(partyDim)
+	.group(partyTotal)	
+	.x(d3.scale.linear().domain([0,15]))
+	.centerBar(true)
+	.brushOn(false)
+	.gap(1)
+	.renderHorizontalGridLines(true)
+	.elasticY(true)
+  .yAxis().tickFormat(d3.format("s"))
+
+bar.xAxis().ticks(15);
 
 /*
 var maxRest = restTotal.top(1)[0].value;
