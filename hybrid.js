@@ -43,6 +43,11 @@ var partnerTotal = partnerDim.group().reduceSum(function(d) {return d.count;});
 
 var pie = dc.pieChart('#pie');
 
+var colorScale = d3.scale.ordinal().range(['#66c2a5','#fc8d62','#8da0cb','#e78ac3','#a6d854','#ffd92f']);
+
+
+
+
 pie
 	.width(300).height(200)
 	.slicesCap(5)
@@ -51,7 +56,9 @@ pie
 	.innerRadius(30)
 	.renderLabel(false)
 	.legend(dc.legend().gap(3))
-	.colors(d3.scale.category10());
+	.colors(colorScale);
+
+
 
 // Bar Chart - Restaurant Volume
 
