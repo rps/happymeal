@@ -55,15 +55,16 @@ var partyTotal = partyDim.group().reduceSum(function(d) { return d.count; });
 var line = dc.lineChart("#line");
 
 line
-	.width(500).height(200)
+	.width(500)
+	.height(200)
+	.margins({top: 20, right: 10, bottom: 40, left: 40})
 	.dimension(hourDim)
 	.group(hourlyTotal)
-	.margins({top: 20, right: 10, bottom: 40, left: 40})
 	.x(d3.scale.linear().domain([0,24]))
 	.yAxisLabel("Reservations per Hour") 
-	.elasticY(true)
+	.elasticY(true);
 	
-line.yAxis().tickFormat(d3.format("s"))
+line.yAxis().tickFormat(d3.format("s"));
 
 /* 
  * Reservations from referrers
@@ -76,14 +77,15 @@ var colorScale = d3.scale.ordinal().range(['#66c2a5','#fc8d62','#8da0cb','#e78ac
 var pie = dc.pieChart('#pie');
 
 pie
-	.width(300).height(200)
-	.slicesCap(5)
+	.width(300)
+	.height(200)
 	.dimension(partnerDim)
 	.group(partnerTotal)
+	.colors(colorScale)
 	.innerRadius(30)
+	.slicesCap(5)
 	.renderLabel(false)
 	.legend(dc.legend().gap(3))
-	.colors(colorScale);
 
 var pieTip = d3.tip()
   .attr('class', 'd3-tip')
@@ -121,14 +123,14 @@ bar
 	// .brushOn(false)
 	.dimension(partyDim)
 	.group(partyTotal)	
-	.x(d3.scale.linear().domain([0,15]))
 	.centerBar(true)
 	.renderHorizontalGridLines(true)
+	.x(d3.scale.linear().domain([0,15]))
 	.elasticY(true)
 	.yAxisLabel("Party Size") 
   .yAxis().tickFormat(d3.format("s"))
 
-bar.xAxis().ticks(15);
+bar.xAxis().ticks(14);
 
 /*
 var maxRest = restaurantTotal.top(1)[0].value;
