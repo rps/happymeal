@@ -1,15 +1,17 @@
+// (function(){
+
+/* 
+ * Initial setup
+ */
+
+// Add data to crossfilter
 var ndx = crossfilter(data),
     all = ndx.groupAll();
 
-d3.selectAll(".total-count")
-      .text((ndx.size()));
-
-dc.dataCount(".dc-data-count")
-  .dimension(ndx)
-  .group(all);
-
+// Formatting helper
 var parseDate = d3.time.format("%Y-%m-%dT%X");
 
+// Format the data
 data.forEach(function(d){
 	d.date = parseDate.parse(d.DateMadeUtc);
   d.localDate = parseDate.parse(d.ShiftDateTime);
@@ -18,19 +20,44 @@ data.forEach(function(d){
   d.count = 1;
 });
 
-// Line Chart - Local Hourly Demand
+// Count of all records
+d3.selectAll(".total-count")
+      .text((ndx.size()));
 
-var hourDim = ndx.dimension(function(d){ return d.localHour; });
-var reservations = hourDim.group().reduceSum(dc.pluck('count'));
-var minHour = hourDim.bottom(1)[0].localHour;
-var maxHour = hourDim.top(1)[0].localHour;
+// Count of selected records
+dc.dataCount(".dc-data-count")
+  .dimension(ndx)
+  .group(all);
 
+/* 
+ * Chart variables
+ */
+
+// Dimensions
+var hourDim = ndx.dimension(function(d){ return d.localHour; }),
+    partnerDim = ndx.dimension(function(d) { return d.Partnername; }),
+    restaurantDim = ndx.dimension(function(d){ return d.RestaurantName; }),
+    partyDim = ndx.dimension(function(d) { return d.Partysize; });
+
+// Counts of bookings
+var hourlyTotal = hourDim.group().reduceSum(function(d) { return d.count; }),
+    partnerTotal = partnerDim.group().reduceSum(function(d) { return d.count; }),
+    restaurantTotal = restaurantDim.group().reduceSum(function(d) { return d.count; });
+
+// Count of party size 
+var partyTotal = partyDim.group().reduceSum(function(d) { return d.count; });
+
+/* 
+ * Local hourly reservations
+ */
+
+// Demand chart
 var line = dc.lineChart("#line");
 
 line
 	.width(500).height(200)
 	.dimension(hourDim)
-	.group(reservations)
+	.group(hourlyTotal)
 	.margins({top: 20, right: 10, bottom: 40, left: 40})
 	.x(d3.scale.linear().domain([0,24]))
 	.yAxisLabel("Reservations per Hour") 
@@ -38,14 +65,15 @@ line
 	
 line.yAxis().tickFormat(d3.format("s"))
 
-// Pie Chart - Referrers
+/* 
+ * Reservations from referrers
+ */
 
-var partnerDim = ndx.dimension(function(d) { return d.Partnername; });
-var partnerTotal = partnerDim.group().reduceSum(function(d) {return d.count;});
-
-var pie = dc.pieChart('#pie');
-
+// Coloration
 var colorScale = d3.scale.ordinal().range(['#66c2a5','#fc8d62','#8da0cb','#e78ac3','#a6d854','#ffd92f']);
+
+// Referrer chart
+var pie = dc.pieChart('#pie');
 
 pie
 	.width(300).height(200)
@@ -64,27 +92,26 @@ var pieTip = d3.tip()
 
 // TODO - Add d3tips
 
-// Row Chart - Restaurant Volume
+/* 
+ * Reservations per restaurnat
+ */
 
-var restDim = ndx.dimension(function(d){ return d.RestaurantName; });
-var restTotal = restDim.group().reduceSum(function(d) { return d.count; });
-
+// Restaurant chart
 var row = dc.rowChart('#row');
 
 row
   .width(500)
   .height(500)
-  .dimension(restDim)
-  .group(restTotal)
-  // .elasticX(true)
+  .dimension(restaurantDim)
+  .group(restaurantTotal)
+  .elasticX(true)
   .xAxis().ticks(4);
 
+/* 
+ * Distribution of party size
+ */
 
-// Bar Chart - Party Size
-
-var partyDim = ndx.dimension(function(d) { return d.Partysize; });
-var partyTotal = partyDim.group().reduceSum(function(d) { return d.count; });
-
+// Party size chart
 var bar = dc.barChart('#bar');
 
 bar
@@ -103,26 +130,29 @@ bar
 
 bar.xAxis().ticks(15);
 
-
-var maxRest = restTotal.top(1)[0].value;
+/*
+var maxRest = restaurantTotal.top(1)[0].value;
 var minRest;
 var ratio;
 
-// Trigger elastic rows if data is too small
-// document.addEventListener('mouseup',function(){
-// 	setTimeout(function(e){
-// 		minRest = restTotal.top(1)[0].value;
-// 		ratio = minRest / maxRest;
-// 		console.log(ratio);
-// 		if(ratio < .25){
-// 			row.elasticX(true);
-// 			dc.redrawAll('restTotal');
-// 		} else {
-// 			row.elasticX(false);
-// 			dc.redrawAll('restTotal');
-// 		}
-// 	},1);
-// }, true);
+Trigger elastic rows if data is too small
+document.addEventListener('mouseup',function(){
+	setTimeout(function(e){
+		minRest = restaurantTotal.top(1)[0].value;
+		ratio = minRest / maxRest;
+		console.log(ratio);
+		if(ratio < .25){
+			row.elasticX(true);
+			dc.redrawAll('restaurantTotal');
+		} else {
+			row.elasticX(false);
+			dc.redrawAll('restaurantTotal');
+		}
+	},1);
+}, true);
+*/
 
-
+// Render all charts
 dc.renderAll();
+
+// })()
