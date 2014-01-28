@@ -31,10 +31,9 @@ line
 	.width(500).height(200)
 	.dimension(hourDim)
 	.group(reservations)
-	.x(d3.time.scale().domain([minHour,maxHour]).range([0,20000]))
+	.x(d3.scale.linear().domain([0,24]))
 	.yAxisLabel("Reservations per Hour") 
-	.elasticY(true); 
-	
+	.elasticY(true)
 
 // Pie Chart - Referrers
 
@@ -45,9 +44,6 @@ var pie = dc.pieChart('#pie');
 
 var colorScale = d3.scale.ordinal().range(['#66c2a5','#fc8d62','#8da0cb','#e78ac3','#a6d854','#ffd92f']);
 
-
-
-
 pie
 	.width(300).height(200)
 	.slicesCap(5)
@@ -57,6 +53,11 @@ pie
 	.renderLabel(false)
 	.legend(dc.legend().gap(3))
 	.colors(colorScale);
+
+var pieTip = d3.tip()
+  .attr('class', 'd3-tip')
+  .offset([-10, 0])
+  .html(function (d) { console.log(d); return "<span style='color: #f0027f'>" +  d.data.key + "</span> : "  + numberFormat(d.value); });
 
 
 
@@ -72,7 +73,29 @@ row
     .height(500)
     .dimension(restDim)
     .group(restTotal)
+    // .elasticX(true)
     .xAxis().ticks(4);
 
+/*
+var maxRest = restTotal.top(1)[0].value;
+var minRest;
+var ratio;
+
+// Trigger elastic rows if data is too small
+document.addEventListener('mouseup',function(){
+	setTimeout(function(e){
+		minRest = restTotal.top(1)[0].value;
+		ratio = minRest / maxRest;
+		console.log(ratio);
+		if(ratio < .25){
+			row.elasticX(true);
+			dc.renderAll('restTotal');
+		} else {
+			row.elasticX(false);
+			dc.renderAll('restTotal');
+		}
+	},1);
+}, true);
+*/
 
 dc.renderAll();
