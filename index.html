@@ -9,11 +9,6 @@
     <link href='http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css' rel='stylesheet'>
     <link rel='stylesheet' href='http://rps.github.io/dc.css'>    
     <link rel='stylesheet' href='./styles.css'>
-    <script src='./data/m.json' type='text/javascript'></script>
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js'></script>
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js'></script>
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.1/crossfilter.min.js'></script>
-    <script src='http://rps.github.io/dc.min.js'></script>
   </head>
 
   <body>
@@ -42,25 +37,25 @@
         <div class='col-md-4'>
           <div id='row'>
             <h2>Restaurant Volume</h2>
-            <a class='reset btn btn-xs btn-danger' href='javascript:restaurantChart.filterAll();dc.redrawAll();' style='display: none;'>reset</a>
+            <a class='reset btn btn-xs btn-danger' href='javascript:filterChart("restaurantChart");dc.redrawAll();' style='display: none;'>reset</a>
           </div>
         </div>
         <div class='col-md-4'>
           <div id='line'>
             <h2>Hourly Traffic</h2>
-            <a class='reset btn btn-xs btn-danger' href='javascript:hourlyChart.filterAll();dc.redrawAll();' style='display: none;'>reset</a>
+            <a class='reset btn btn-xs btn-danger' href='javascript:filterChart("hourlyChart");dc.redrawAll();' style='display: none;'>reset</a>
           </div>
         </div>  
         <div class='col-md-4'>
           <div id='pie'>
             <h2>Referrers</h2>
-            <a class='reset btn btn-xs btn-danger' href='javascript:referrerChart.filterAll();dc.redrawAll();' style='display: none;'>reset</a>
+            <a class='reset btn btn-xs btn-danger' href='javascript:filterChart("referrerChart");dc.redrawAll();' style='display: none;'>reset</a>
           </div>          
        </div>
         <div class='col-md-4'>
           <div id='bar'>
             <h2>Party Sizes</h2>
-            <a class='reset btn btn-xs btn-danger' href='javascript:partyChart.filterAll();dc.redrawAll();' style='display: none;'>reset</a>
+            <a class='reset btn btn-xs btn-danger' href='javascript:filterChart("partyChart");dc.redrawAll();' style='display: none;'>reset</a>
           </div>          
         </div>
       </div>
@@ -74,7 +69,12 @@
         <p>&copy; Rich Parrish - 2014</p>
       </footer>
     </div>
-
+    
+    <script src='./data/m.json' type='text/javascript'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.1/crossfilter.min.js'></script>
+    <script src='http://rps.github.io/dc.min.js'></script>
     <script src='http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/js/bootstrap.min.js'></script>
     <script src='hybrid.js'></script> 
   </body>

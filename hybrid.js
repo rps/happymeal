@@ -1,8 +1,11 @@
-// (function(){
+var filterChart = (function(){
 
 /* 
  * Initial setup
  */
+
+// Access variable
+var innerCharts = {};
 
 // Add data to crossfilter
 var ndx = crossfilter(data),
@@ -67,9 +70,9 @@ var marginSetting = {top: 20, right: 10, bottom: 40, left: 40};
  */
 
 // Demand chart
-var hourlyChart = dc.lineChart('#line');
+innerCharts.hourlyChart = dc.lineChart('#line');
 
-hourlyChart
+innerCharts.hourlyChart
 	.width(350)
 	.height(200)
 	.margins(marginSetting)
@@ -79,7 +82,7 @@ hourlyChart
 	.yAxisLabel('Reservations') 
 	.elasticY(true);
 	
-hourlyChart.yAxis().tickFormat(d3.format('s'));
+innerCharts.hourlyChart.yAxis().tickFormat(d3.format('s'));
 
 /* 
  * Reservations from referrers
@@ -89,12 +92,12 @@ hourlyChart.yAxis().tickFormat(d3.format('s'));
 var colorScale = d3.scale.ordinal().range(['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6']);
 
 // Referrer chart
-var referrerChart = dc.pieChart('#pie');
+innerCharts.referrerChart = dc.pieChart('#pie');
 
 // Sizing variables
 var totalPie = 0;
 
-referrerChart
+innerCharts.referrerChart
 	.width(350)
 	.height(200)
 	.dimension(partnerDim)
@@ -119,14 +122,14 @@ referrerChart
  */
 
 // Restaurant chart
-var restaurantChart = dc.rowChart('#row');
+innerCharts.restaurantChart = dc.rowChart('#row');
 
 // Sizing variables
 var currentMaxRow = 0,
 		ratio,
 		chartMax = restaurantTotal.top(1)[0].value;
 
-restaurantChart
+innerCharts.restaurantChart
   .width(350)
   .height(500)
   .dimension(restaurantDim)
@@ -135,11 +138,11 @@ restaurantChart
   	currentMaxRow = restaurantTotal.top(1)[0].value;
   	ratio = currentMaxRow/chartMax;
   	if(ratio < .25 || ratio > 1){
-  		restaurantChart.elasticX(true);
+  		innerCharts.restaurantChart.elasticX(true);
   		chartMax = currentMaxRow;
   		dc.redrawAll();
   	} else {
-  		restaurantChart.elasticX(false);
+  		innerCharts.restaurantChart.elasticX(false);
   		chartMax = currentMaxRow;
   	}
   })
@@ -150,9 +153,9 @@ restaurantChart
  */
 
 // Party size chart
-var partyChart = dc.barChart('#bar');
+innerCharts.partyChart = dc.barChart('#bar');
 
-partyChart
+innerCharts.partyChart
 	.width(350)
 	.height(200)
 	.margins(marginSetting)
@@ -165,9 +168,14 @@ partyChart
 	.yAxisLabel('Reservations') 
   .yAxis().tickFormat(d3.format('s'))
 
-partyChart.xAxis().ticks(14);
+innerCharts.partyChart.xAxis().ticks(14);
 
 // Render all charts
 dc.renderAll();
 
-// })()
+// Public reset function
+return function(chartName){
+	innerCharts[chartName].filterAll();
+};
+
+})();
