@@ -67,9 +67,9 @@ var marginSetting = {top: 20, right: 10, bottom: 40, left: 40};
  */
 
 // Demand chart
-var line = dc.lineChart('#line');
+var hourlyChart = dc.lineChart('#line');
 
-line
+hourlyChart
 	.width(350)
 	.height(200)
 	.margins(marginSetting)
@@ -79,7 +79,7 @@ line
 	.yAxisLabel('Reservations') 
 	.elasticY(true);
 	
-line.yAxis().tickFormat(d3.format('s'));
+hourlyChart.yAxis().tickFormat(d3.format('s'));
 
 /* 
  * Reservations from referrers
@@ -89,12 +89,12 @@ line.yAxis().tickFormat(d3.format('s'));
 var colorScale = d3.scale.ordinal().range(['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6']);
 
 // Referrer chart
-var pie = dc.pieChart('#pie');
+var referrerChart = dc.pieChart('#pie');
 
 // Sizing variables
 var totalPie = 0;
 
-pie
+referrerChart
 	.width(350)
 	.height(200)
 	.dimension(partnerDim)
@@ -115,18 +115,18 @@ pie
 	.legend(dc.legend().gap(3));
 
 /* 
- * Reservations per restaurnat
+ * Reservations per restaurant
  */
 
 // Restaurant chart
-var row = dc.rowChart('#row');
+var restaurantChart = dc.rowChart('#row');
 
 // Sizing variables
 var currentMaxRow = 0,
 		ratio,
 		chartMax = restaurantTotal.top(1)[0].value;
 
-row
+restaurantChart
   .width(350)
   .height(500)
   .dimension(restaurantDim)
@@ -135,11 +135,11 @@ row
   	currentMaxRow = restaurantTotal.top(1)[0].value;
   	ratio = currentMaxRow/chartMax;
   	if(ratio < .25 || ratio > 1){
-  		row.elasticX(true);
+  		restaurantChart.elasticX(true);
   		chartMax = currentMaxRow;
   		dc.redrawAll();
   	} else {
-  		row.elasticX(false);
+  		restaurantChart.elasticX(false);
   		chartMax = currentMaxRow;
   	}
   })
@@ -150,9 +150,9 @@ row
  */
 
 // Party size chart
-var bar = dc.barChart('#bar');
+var partyChart = dc.barChart('#bar');
 
-bar
+partyChart
 	.width(350)
 	.height(200)
 	.margins(marginSetting)
@@ -165,7 +165,7 @@ bar
 	.yAxisLabel('Reservations') 
   .yAxis().tickFormat(d3.format('s'))
 
-bar.xAxis().ticks(14);
+partyChart.xAxis().ticks(14);
 
 // Render all charts
 dc.renderAll();
