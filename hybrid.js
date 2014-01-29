@@ -9,7 +9,7 @@ var ndx = crossfilter(data),
     all = ndx.groupAll();
 
 // Formatting helpers
-var parseDate = d3.time.format("%Y-%m-%dT%X");
+var parseDate = d3.time.format('%Y-%m-%dT%X');
     percentage = d3.format('.2p'),
     roundPercentage = function(d) { return percentage(d3.round(d, 3)); };
 
@@ -23,16 +23,16 @@ data.forEach(function(d){
 });
 
 // Count of all records
-d3.selectAll(".total-count")
+d3.selectAll('.total-count')
       .text((ndx.size()));
 
 // Count of selected records
-dc.dataCount(".dc-data-count")
+dc.dataCount('.dc-data-count')
   .dimension(ndx)
   .group(all);
 
 // Helper function
-var calcTotalOrMax = function(chart) {
+var calcTotal = function(chart) {
 	var dataVar = chart.data(),
 			totalVar = 0;
 	for(var item in dataVar){
@@ -67,7 +67,7 @@ var marginSetting = {top: 20, right: 10, bottom: 40, left: 40};
  */
 
 // Demand chart
-var line = dc.lineChart("#line");
+var line = dc.lineChart('#line');
 
 line
 	.width(350)
@@ -76,10 +76,10 @@ line
 	.dimension(hourDim)
 	.group(hourlyTotal)
 	.x(d3.scale.linear().domain([0,24]))
-	.yAxisLabel("Reservations") 
+	.yAxisLabel('Reservations') 
 	.elasticY(true);
 	
-line.yAxis().tickFormat(d3.format("s"));
+line.yAxis().tickFormat(d3.format('s'));
 
 /* 
  * Reservations from referrers
@@ -102,24 +102,17 @@ pie
 	.colors(colorScale)
 	.innerRadius(30)
 	.slicesCap(5)
-	.on("preRender", function(chart){
-		totalPie = calcTotalOrMax(chart);
+	.on('preRender', function(chart){
+		totalPie = calcTotal(chart);
 	})
-	.on("preRedraw", function(chart){
-		totalPie = calcTotalOrMax(chart);
+	.on('preRedraw', function(chart){
+		totalPie = calcTotal(chart);
 	})
   .title(function (p) {
   	return percentage(p.value/totalPie);
 	})
   .renderLabel(false)
 	.legend(dc.legend().gap(3));
-
-var pieTip = d3.tip()
-  .attr('class', 'd3-tip')
-  .offset([-10, 0])
-  .html(function (d) { console.log(d); return "<span style='color: #f0027f'>" +  d.data.key + "</span> : "  + numberFormat(d.value); });
-
-// TODO - Add d3tips
 
 /* 
  * Reservations per restaurnat
@@ -163,40 +156,16 @@ bar
 	.width(350)
 	.height(200)
 	.margins(marginSetting)
-	// .brushOn(false)
 	.dimension(partyDim)
 	.group(partyTotal)	
 	.centerBar(true)
 	.renderHorizontalGridLines(true)
 	.x(d3.scale.linear().domain([0,15]))
 	.elasticY(true)
-	.yAxisLabel("Reservations") 
-  .yAxis().tickFormat(d3.format("s"))
+	.yAxisLabel('Reservations') 
+  .yAxis().tickFormat(d3.format('s'))
 
 bar.xAxis().ticks(14);
-
-
-/*
-var maxRest = restaurantTotal.top(1)[0].value;
-var minRest;
-var ratio;
-
-Trigger elastic rows if data is too small
-document.addEventListener('mouseup',function(){
-	setTimeout(function(e){
-		minRest = restaurantTotal.top(1)[0].value;
-		ratio = minRest / maxRest;
-		console.log(ratio);
-		if(ratio < .25){
-			row.elasticX(true);
-			dc.redrawAll('restaurantTotal');
-		} else {
-			row.elasticX(false);
-			dc.redrawAll('restaurantTotal');
-		}
-	},1);
-}, true);
-*/
 
 // Render all charts
 dc.renderAll();
