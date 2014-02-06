@@ -1,5 +1,5 @@
 var filterChart = (function(){
-
+'use strict'
 /* 
  * Initial setup
  */
@@ -12,7 +12,7 @@ var ndx = crossfilter(data),
     all = ndx.groupAll();
 
 // Formatting helpers
-var parseDate = d3.time.format('%Y-%m-%dT%X');
+var parseDate = d3.time.format('%Y-%m-%dT%X'),
     percentage = d3.format('.2p'),
     roundPercentage = function(d) { return percentage(d3.round(d, 3)); };
 
@@ -161,9 +161,9 @@ innerCharts.partyChart
 	.margins(marginSetting)
 	.dimension(partyDim)
 	.group(partyTotal)	
-	.centerBar(true)
 	.renderHorizontalGridLines(true)
-	.x(d3.scale.linear().domain([0,15]))
+	.x(d3.scale.ordinal().domain([1,2,3,4,5,6,7,8,9,10]))
+	.xUnits(dc.units.ordinal)
 	.elasticY(true)
 	.yAxisLabel('Reservations') 
   .yAxis().tickFormat(d3.format('s'))
