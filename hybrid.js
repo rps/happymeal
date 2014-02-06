@@ -18,7 +18,7 @@ var parseDate = d3.time.format('%Y-%m-%dT%X'),
 
 // Format the data
 data.forEach(function(d){
-	d.date = parseDate.parse(d.DateMadeUtc);
+  d.date = parseDate.parse(d.DateMadeUtc);
   d.localDate = parseDate.parse(d.ShiftDateTime);
   d.hour = d.date.getHours();
   d.localHour = d.localDate.getHours();
@@ -36,12 +36,12 @@ dc.dataCount('.dc-data-count')
 
 // Helper function
 var calcTotal = function(chart) {
-	var dataVar = chart.data(),
-			totalVar = 0;
-	for(var item in dataVar){
-		totalVar += dataVar[item].value;
-	}
-	return totalVar;
+  var dataVar = chart.data(),
+      totalVar = 0;
+  for(var item in dataVar){
+    totalVar += dataVar[item].value;
+  }
+  return totalVar;
 };  
 
 /* 
@@ -73,15 +73,15 @@ var marginSetting = {top: 20, right: 10, bottom: 40, left: 40};
 innerCharts.hourlyChart = dc.lineChart('#line');
 
 innerCharts.hourlyChart
-	.width(350)
-	.height(200)
-	.margins(marginSetting)
-	.dimension(hourDim)
-	.group(hourlyTotal)
-	.x(d3.scale.linear().domain([0,24]))
-	.yAxisLabel('Reservations') 
-	.elasticY(true);
-	
+  .width(350)
+  .height(200)
+  .margins(marginSetting)
+  .dimension(hourDim)
+  .group(hourlyTotal)
+  .x(d3.scale.linear().domain([0,24]))
+  .yAxisLabel('Reservations') 
+  .elasticY(true);
+  
 innerCharts.hourlyChart.yAxis().tickFormat(d3.format('s'));
 
 /* 
@@ -98,24 +98,24 @@ innerCharts.referrerChart = dc.pieChart('#pie');
 var totalPie = 0;
 
 innerCharts.referrerChart
-	.width(350)
-	.height(200)
-	.dimension(partnerDim)
-	.group(partnerTotal)
-	.colors(colorScale)
-	.innerRadius(30)
-	.slicesCap(5)
-	.on('preRender', function(chart){
-		totalPie = calcTotal(chart);
-	})
-	.on('preRedraw', function(chart){
-		totalPie = calcTotal(chart);
-	})
+  .width(350)
+  .height(200)
+  .dimension(partnerDim)
+  .group(partnerTotal)
+  .colors(colorScale)
+  .innerRadius(30)
+  .slicesCap(5)
+  .on('preRender', function(chart){
+    totalPie = calcTotal(chart);
+  })
+  .on('preRedraw', function(chart){
+    totalPie = calcTotal(chart);
+  })
   .title(function (p) {
-  	return percentage(p.value/totalPie);
-	})
+    return percentage(p.value/totalPie);
+  })
   .renderLabel(false)
-	.legend(dc.legend().gap(3));
+  .legend(dc.legend().gap(3));
 
 /* 
  * Reservations per restaurant
@@ -126,8 +126,8 @@ innerCharts.restaurantChart = dc.rowChart('#row');
 
 // Sizing variables
 var currentMaxRow = 0,
-		ratio,
-		chartMax = restaurantTotal.top(1)[0].value;
+    ratio,
+    chartMax = restaurantTotal.top(1)[0].value;
 
 innerCharts.restaurantChart
   .width(350)
@@ -135,16 +135,16 @@ innerCharts.restaurantChart
   .dimension(restaurantDim)
   .group(restaurantTotal)
   .on('postRedraw', function(chart){
-  	currentMaxRow = restaurantTotal.top(1)[0].value;
-  	ratio = currentMaxRow/chartMax;
-  	if(ratio < .25 || ratio > 1){
-  		innerCharts.restaurantChart.elasticX(true);
-  		chartMax = currentMaxRow;
-  		dc.redrawAll();
-  	} else {
-  		innerCharts.restaurantChart.elasticX(false);
-  		chartMax = currentMaxRow;
-  	}
+    currentMaxRow = restaurantTotal.top(1)[0].value;
+    ratio = currentMaxRow/chartMax;
+    if(ratio < .25 || ratio > 1){
+      innerCharts.restaurantChart.elasticX(true);
+      chartMax = currentMaxRow;
+      dc.redrawAll();
+    } else {
+      innerCharts.restaurantChart.elasticX(false);
+      chartMax = currentMaxRow;
+    }
   })
   .xAxis().ticks(4);
 
@@ -156,17 +156,17 @@ innerCharts.restaurantChart
 innerCharts.partyChart = dc.barChart('#bar');
 
 innerCharts.partyChart
-	.width(350)
-	.height(200)
-	.margins(marginSetting)
-	.dimension(partyDim)
-	.group(partyTotal)	
-	.renderHorizontalGridLines(true)
-	.x(d3.scale.ordinal().domain([1,2,3,4,5,6,7,8,9,10]))
-	.xUnits(dc.units.ordinal)
-	.elasticY(true)
-	.yAxisLabel('Reservations') 
-  .yAxis().tickFormat(d3.format('s'))
+  .width(350)
+  .height(200)
+  .margins(marginSetting)
+  .dimension(partyDim)
+  .group(partyTotal)  
+  .renderHorizontalGridLines(true)
+  .x(d3.scale.ordinal().domain([1,2,3,4,5,6,7,8,9,10]))
+  .xUnits(dc.units.ordinal)
+  .elasticY(true)
+  .yAxisLabel('Reservations') 
+  .yAxis().tickFormat(d3.format('s'));
 
 innerCharts.partyChart.xAxis().ticks(14);
 
@@ -175,7 +175,7 @@ dc.renderAll();
 
 // Public reset function
 return function(chartName){
-	innerCharts[chartName].filterAll();
+  innerCharts[chartName].filterAll();
 };
 
 })();
